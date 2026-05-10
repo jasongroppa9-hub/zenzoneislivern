@@ -70,7 +70,7 @@ function Ring({ value, max = 100, size = 140, stroke = 11, color, bg = C.dim, ch
         <circle
           cx={size / 2} cy={size / 2} r={r} fill="none"
           stroke={color} strokeWidth={stroke}
-          strokeDasharray={`${dash} ${circ}`}
+          strokeDasharray={dash + " " + (circ - dash)}
           strokeLinecap="round"
           style={{ filter: `drop-shadow(0 0 6px ${color}66)` }}
         />
