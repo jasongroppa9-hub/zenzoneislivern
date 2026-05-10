@@ -1,8 +1,5 @@
-import { useState, useEffect } from "react";
-import {
-  LineChart, Line, BarChart, Bar, AreaChart, Area,
-  XAxis, YAxis, Tooltip, ResponsiveContainer, Cell
-} from "recharts";
+import { useState } from "react";
+import { LineChart, Line, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 const C = {
   bg: "#000000",
@@ -13,13 +10,11 @@ const C = {
   recoveryDim: "#00D9C020",
   strain: "#FF5C2A",
   strainDim: "#FF5C2A20",
-  sleep: "#A78BFA",
-  sleepDim: "#A78BFA20",
-  yellow: "#F5C842",
+  sleep: "#A7BBFA",
+  sleepDim: "#A7BBFA20",
   text: "#F0F0F8",
   muted: "#5A5A72",
   dim: "#1E1E2E",
-  dimbright: "#2A2A3E",
 };
 
 const weekData = [
@@ -33,17 +28,21 @@ const weekData = [
 ];
 
 function Ring({ value, max = 100, size = 140, stroke = 11, color, bg = C.dim, children }) {
-  const r = (size - stroke) / 2;
-  const circ = 2 * Math.PI * r;
-  const dash = Math.min(value / max, 1) * circ;
-  const dashStr = dash + " " + (circ - dash);
+  var r = (size - stroke) / 2;
+  var circ = 2 * Math.PI * r;
+  var dash = Math.min(value / max, 1) * circ;
+  var dashStr = String(dash) + " " + String(circ - dash);
   return (
     <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
       <svg width={size} height={size} style={{ position: "absolute", top: 0, left: 0, transform: "rotate(-90deg)" }}>
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={bg} strokeWidth={stroke} />
         <circle
-          cx={size / 2} cy={size / 2} r={r} fill="none"
-          stroke={color} strokeWidth={stroke}
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke={color}
+          strokeWidth={stroke}
           strokeDasharray={dashStr}
           strokeLinecap="round"
         />
@@ -55,17 +54,37 @@ function Ring({ value, max = 100, size = 140, stroke = 11, color, bg = C.dim, ch
   );
 }
 
-function WhoopApp() {
-  const [tab, setTab] = useState("today");
+function App() {
+  var tabState = useState("today");
+  var tab = tabState[0];
+  var setTab = tabState[1];
+
   return (
     <div style={{ minHeight: "100vh", backgroundColor: C.bg, color: C.text, fontFamily: "system-ui, sans-serif", padding: "20px" }}>
       <div style={{ maxWidth: 900, margin: "0 auto" }}>
-        <h1 style={{ color: C.recovery, marginBottom: 20 }}>ZenZone Fitness Dashboard</h1>
+        <h1 style={{ color: C.recovery, marginBottom: 16 }}>ZenZone Fitness Dashboard</h1>
         <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
-          {["today", "week", "trends"].map(t => (
-            <button key={t} onClick={() => setTab(t)} style={{ padding: "8px 16px", borderRadius: 20, border: "none", cursor: "pointer", backgroundColor: tab === t ? C.recovery : C.dim, color: tab === t ? "#000" : C.text, fontWeight: tab === t ? 700 : 400 }}>{t.charAt(0).toUpperCase() + t.slice(1)}</button>
-          ))}
+          {["today", "week", "trends"].map(function(t) {
+            return (
+              <button
+                key={t}
+                onClick={function() { setTab(t); }}
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: 20,
+                  border: "none",
+                  cursor: "pointer",
+                  backgroundColor: tab === t ? C.recovery : C.dim,
+                  color: tab === t ? "#000" : C.text,
+                  fontWeight: tab === t ? 700 : 400,
+                }}
+              >
+                {t.charAt(0).toUpperCase() + t.slice(1)}
+              </button>
+            );
+          })}
         </div>
+
         {tab === "today" && (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
             <div style={{ backgroundColor: C.card, borderRadius: 16, padding: 20, textAlign: "center" }}>
@@ -88,6 +107,7 @@ function WhoopApp() {
             </div>
           </div>
         )}
+
         {tab === "week" && (
           <div style={{ backgroundColor: C.card, borderRadius: 16, padding: 20 }}>
             <h3 style={{ color: C.muted, marginBottom: 16 }}>Weekly Overview</h3>
@@ -102,6 +122,7 @@ function WhoopApp() {
             </ResponsiveContainer>
           </div>
         )}
+
         {tab === "trends" && (
           <div style={{ backgroundColor: C.card, borderRadius: 16, padding: 20 }}>
             <h3 style={{ color: C.muted, marginBottom: 16 }}>HRV Trends</h3>
@@ -120,4 +141,4 @@ function WhoopApp() {
   );
 }
 
-export default WhoopApp;
+export default App;
