@@ -3,9 +3,6 @@
   "devCommand": "npm start",
   "installCommand": "npm install",
   "framework": "react",
-  "env": [
-    "REACT_APP_API_URL"
-  ],
   "routes": [
     {
       "src": "/(.*)",
