@@ -1,32 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="ZenZone - Nike-style e-commerce store" />
-    <title>ZenZone | Premium Clothing Store</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica
-          Neue', sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        background-color: #fff;
-      }
-      code {
-        font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-      }
-    </style>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ZenZone Fitness</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:#F0F0F8;font-family:system-ui,sans-serif;min-height:100vh}
+.app{max-width:900px;margin:0 auto;padding:24px 16px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.header h1{font-size:22px;font-weight:700}
+.header p{font-size:13px;color:#5A5A72}
+.tabs{display:flex;gap:8px;margin-bottom:24px}
+.tab{padding:8px 18px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:500;background:#14141E;color:#5A5A72;transition:.2s}
+.tab.active{background:#00D9C0;color:#000}
+.cards{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.scorecard{flex:1;min-width:140px;background:#14141E;border:1px solid #1C1C2A;border-radius:16px;padding:20px}
+.scorecard .label{font-size:11px;color:#5A5A72;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.scorecard .value{font-size:32px;font-weight:700;margin-bottom:2px}
+.scorecard .sub{font-size:12px;color:#5A5A72;margin-bottom:10px}
+.bar-bg{height:6px;background:#1C1C2A;border-radius:3px}
+.bar-fill{height:100%;border-radius:3px;transition:width .5s}
+.card{background:#14141E;border:1px solid #1C1C2A;border-radius:16px;padding:20px;margin-bottom:16px}
+.card-title{font-size:13px;color:#5A5A72;margin-bottom:16px;text-transform:uppercase;letter-spacing:.05em}
+.chart-area{display:flex;align-items:flex-end;gap:6px;height:120px}
+.chart-bar{flex:1;border-radius:4px 4px 0 0;min-width:20px;transition:height .5s;cursor:pointer;position:relative}
+.chart-bar:hover{opacity:.8}
+.chart-labels{display:flex;gap:6px;margin-top:6px}
+.chart-label{flex:1;text-align:center;font-size:11px;color:#5A5A72}
+.activity-item{display:flex;justify-content:space-between;align-items:center;background:#14141E;border:1px solid #1C1C2A;border-radius:12px;padding:16px;margin-bottom:10px}
+.activity-name{font-size:16px;font-weight:600;margin-bottom:4px}
+.activity-meta{font-size:12px;color:#5A5A72}
+.activity-strain{font-size:24px;font-weight:700;color:#FF5C2A}
+.line-chart{position:relative;height:120px;margin-bottom:6px}
+svg{width:100%;height:100%}
+hidden{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div>
+      <h1>ZenZone Fitness</h1>
+      <p>Your daily performance dashboard</p>
+    </div>
+    <div style="font-size:13px;color:#5A5A72">Today</div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('today')">Today</button>
+    <button class="tab" onclick="showTab('sleep')">Sleep</button>
+    <button class="tab" onclick="showTab('activity')">Activity</button>
+    <button class="tab" onclick="showTab('trends')">Trends</button>
+  </div>
+  <div id="today">
+    <div class="cards">
+      <div class="scorecard"><div class="label">Recovery</div><div class="value" style="color:#00D9C0">78</div><div class="sub">Good</div><div class="bar-bg"><div class="bar-fill" style="width:78%;background:#00D9C0"></div></div></div>
+      <div class="scorecard"><div class="label">Strain</div><div class="value" style="color:#FF5C2A">14.2</div><div class="sub">High</div><div class="bar-bg"><div class="bar-fill" style="width:68%;background:#FF5C2A"></div></div></div>
+      <div class="scorecard"><div class="label">Sleep</div><div class="value" style="color:#A78BFA">82</div><div class="sub">7h 42m</div><div class="bar-bg"><div class="bar-fill" style="width:82%;background:#A78BFA"></div></div></div>
+      <div class="scorecard"><div class="label">HRV</div><div class="value" style="color:#F5C842">67</div><div class="sub">ms</div><div class="bar-bg"><div class="bar-fill" style="width:56%;background:#F5C842"></div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Weekly Recovery Trend</div>
+      <div class="chart-area" id="recovery-chart"></div>
+      <div class="chart-labels" id="recovery-labels"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Weekly Strain</div>
+      <div class="chart-area" id="strain-chart"></div>
+      <div class="chart-labels" id="strain-labels"></div>
+    </div>
+  </div>
+  <div id="sleep" style="display:none">
+    <div class="cards">
+      <div class="scorecard"><div class="label">Sleep Score</div><div class="value" style="color:#A78BFA">82</div><div class="sub">Good</div><div class="bar-bg"><div class="bar-fill" style="width:82%;background:#A78BFA"></div></div></div>
+      <div class="scorecard"><div class="label">Duration</div><div class="value" style="color:#00D9C0;font-size:22px;padding-top:6px">7h 42m</div><div class="sub">Goal: 8h</div><div class="bar-bg"><div class="bar-fill" style="width:96%;background:#00D9C0"></div></div></div>
+      <div class="scorecard"><div class="label">REM Sleep</div><div class="value" style="color:#F5C842;font-size:22px;padding-top:6px">1h 48m</div><div class="sub">22%</div><div class="bar-bg"><div class="bar-fill" style="width:22%;background:#F5C842"></div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Weekly Sleep Scores</div>
+      <div class="chart-area" id="sleep-chart"></div>
+      <div class="chart-labels" id="sleep-labels"></div>
+    </div>
+  </div>
+  <div id="activity" style="display:none">
+    <div class="activity-item"><div><div class="activity-name">Morning Run</div><div class="activity-meta">48 min &bull; 410 cal</div></div><div class="activity-strain">14.2</div></div>
+    <div class="activity-item"><div><div class="activity-name">Strength Training</div><div class="activity-meta">62 min &bull; 380 cal</div></div><div class="activity-strain">11.8</div></div>
+    <div class="activity-item"><div><div class="activity-name">Cycling</div><div class="activity-meta">75 min &bull; 590 cal</div></div><div class="activity-strain">16.4</div></div>
+    <div class="activity-item"><div><div class="activity-name">Yoga Flow</div><div class="activity-meta">45 min &bull; 180 cal</div></div><div class="activity-strain" style="color:#00D9C0">5.2</div></div>
+  </div>
+  <div id="trends" style="display:none">
+    <div class="card">
+      <div class="card-title">Strain vs Recovery (This Week)</div>
+      <svg id="trends-svg" viewBox="0 0 400 140" preserveAspectRatio="none" style="height:160px"></svg>
+      <div style="display:flex;gap:16px;margin-top:10px">
+        <span style="font-size:12px;color:#00D9C0">&#9632; Recovery</span>
+        <span style="font-size:12px;color:#FF5C2A">&#9632; Strain</span>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+var weekData = [
+  {day:'M',recovery:62,strain:10.8,sleep:73},
+  {day:'T',recovery:74,strain:8.2,sleep:81},
+  {day:'W',recovery:44,strain:17.1,sleep:61},
+  {day:'T',recovery:56,strain:13.4,sleep:69},
+  {day:'F',recovery:83,strain:9.5,sleep:89},
+  {day:'S',recovery:67,strain:15.8,sleep:77},
+  {day:'S',recovery:78,strain:14.2,sleep:82}
+];
+function buildBarChart(chartId, labelId, data, key, color, maxVal) {
+  var chart = document.getElementById(chartId);
+  var labels = document.getElementById(labelId);
+  if (!chart) return;
+  chart.innerHTML = '';
+  labels.innerHTML = '';
+  data.forEach(function(d) {
+    var pct = (d[key] / maxVal) * 100;
+    var bar = document.createElement('div');
+    bar.className = 'chart-bar';
+    bar.style.height = pct + '%';
+    bar.style.background = color;
+    bar.title = d.day + ': ' + d[key];
+    chart.appendChild(bar);
+    var lbl = document.createElement('div');
+    lbl.className = 'chart-label';
+    lbl.textContent = d.day;
+    labels.appendChild(lbl);
+  });
+}
+function buildTrends() {
+  var svg = document.getElementById('trends-svg');
+  if (!svg) return;
+  var W = 400, H = 140, pad = 10;
+  var maxR = 100, maxS = 21;
+  function pts(key, maxV) {
+    return weekData.map(function(d, i) {
+      var x = pad + (i / (weekData.length - 1)) * (W - 2 * pad);
+      var y = H - pad - (d[key] / maxV) * (H - 2 * pad);
+      return x.toFixed(1) + ',' + y.toFixed(1);
+    }).join(' ');
+  }
+  svg.innerHTML = '<polyline points="' + pts('recovery', maxR) + '" fill="none" stroke="#00D9C0" stroke-width="2.5" stroke-linejoin="round"/>' +
+    '<polyline points="' + pts('strain', maxS) + '" fill="none" stroke="#FF5C2A" stroke-width="2.5" stroke-linejoin="round"/>';
+}
+function showTab(name) {
+  ['today','sleep','activity','trends'].forEach(function(t) {
+    document.getElementById(t).style.display = t === name ? '' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach(function(btn) {
+    btn.classList.toggle('active', btn.textContent.toLowerCase() === name);
+  });
+}
+buildBarChart('recovery-chart','recovery-labels',weekData,'recovery','#00D9C0',100);
+buildBarChart('strain-chart','strain-labels',weekData,'strain','#FF5C2A',21);
+buildBarChart('sleep-chart','sleep-labels',weekData,'sleep','#A78BFA',100);
+buildTrends();
+</script>
+</body>
 </html>
