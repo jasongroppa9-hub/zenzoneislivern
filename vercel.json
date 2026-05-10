@@ -1,8 +1,7 @@
 {
   "buildCommand": "npm run build",
-  "devCommand": "npm start",
+  "outputDirectory": "build",
   "installCommand": "npm install",
-  "framework": "react",
   "routes": [
     {
       "src": "/(.*)",
